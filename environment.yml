@@ -1,0 +1,9 @@
+name: election-data
+
+channels:
+  - defaults
+  - conda-forge
+
+dependencies:
+  - python
+  - pandas
