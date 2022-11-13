@@ -62,6 +62,8 @@ for smd in smds:
         if smd in competitive_races:
             margin_counts.loc[margin_counts.SMD == smd, 'margin-%s' %
                               revision] = get_smd_margin(results[revision], smd, competitive_races[smd])
+            margin_counts.loc[margin_counts.SMD == smd, 'margin-pct-%s' %
+                              revision] = get_smd_margin(results[revision], smd, competitive_races[smd])/get_smd_ballot_count(results[revision], smd)
 
 # write it out to a CSV
 ballot_counts.to_csv('ballots_by_smd_over_time.csv', index=False, header=True)
