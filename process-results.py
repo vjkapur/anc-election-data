@@ -43,7 +43,11 @@ smds = [contest.split(' ')[2] for contest in anc_contests]
 smds.sort()
 
 # set up a dataframe for counts by SMD per data revision
-ballot_counts = pd.DataFrame(columns=['SMD'] + revisions)
+revision_metrics = []
+[revision_metrics.extend(update) for update in [['%s ballots' % revision,
+                                                 '%s increase' % revision, '%s pct increase' % revision] for revision in revisions[1:]]]
+ballot_counts = pd.DataFrame(
+    columns=['SMD'] + ['%s ballots' % revisions[0]] + revision_metrics)
 ballot_counts.SMD = smds
 
 # gathering up permutations of margin and margin-pct for each available revision
@@ -58,7 +62,12 @@ margin_counts.SMD = competitive_races.keys()
 for smd in smds:
     for revision in revisions:
         ballot_counts.loc[ballot_counts.SMD == smd,
-                          revision] = get_smd_ballot_count(results[revision], smd)
+                          '%s ballots' % revision] = get_smd_ballot_count(results[revision], smd)
+        if revision != revisions[0]:
+            ballot_counts.loc[ballot_counts.SMD == smd, '%s increase' % revision] = ballot_counts.loc[ballot_counts.SMD == smd, '%s ballots' %
+                                                                                                      revision] - ballot_counts.loc[ballot_counts.SMD == smd, '%s ballots' % revisions[revisions.index(revision) - 1]]
+            ballot_counts.loc[ballot_counts.SMD == smd, '%s pct increase' % revision] = '%.2f%%' % (ballot_counts.loc[ballot_counts.SMD == smd, '%s increase' %
+                                                                                                                      revision] / ballot_counts.loc[ballot_counts.SMD == smd, '%s ballots' % revisions[revisions.index(revision) - 1]] * 100)
         if smd in competitive_races:
             margin_counts.loc[margin_counts.SMD == smd, 'margin-%s' %
                               revision] = get_smd_margin(results[revision], smd, competitive_races[smd])
