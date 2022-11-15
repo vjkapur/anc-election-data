@@ -39,8 +39,8 @@ competitive_races = {'5D06': ['Dellesky', 'Henderson'],
                      '5C04': ['Nelson', 'Manning'],
                      '5F07': ['Keegan', 'Pinkney'],
                      '5B07': ['Perkowski', 'Brevard'],
-                     '5E02': ['McEntee', 'Lewis']}
-                     # '1E07': ['Farnan', 'Footer']}
+                     '5E02': ['McEntee', 'Lewis'],
+                     '1E07': ['Farnan', 'Footer']}
 
 for revision in revisions:
     results[revision] = pd.read_csv('data/%s.csv' % revision)
