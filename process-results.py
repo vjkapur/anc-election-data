@@ -22,24 +22,25 @@ def get_smd_margin(result, smd, candidates):
     return (incl - gate)
 
 # print out a quick digest of what changed for interesting races
-def print_summary_snapshot(new_result, old_result, competitive_races):
+def print_summary_snapshot(old_result, new_result, competitive_races):
     summary = pd.DataFrame(columns = ['SMD', 'candidates', 'previous_margin', 'new_ballots', 'new_margin'])
     summary.SMD = competitive_races.keys()
     for smd in competitive_races:
         summary.loc[summary.SMD == smd, 'candidates'] = "%s/%s" % (competitive_races[smd][0], competitive_races[smd][1])
         summary.loc[summary.SMD == smd, 'previous_margin'] = get_smd_margin(old_result, smd, competitive_races[smd])
-        summary.loc[summary.SMD == smd, 'new_ballots'] = get_smd_ballot_count(old_result, smd) - get_smd_ballot_count(new_result, smd)
+        summary.loc[summary.SMD == smd, 'new_ballots'] = get_smd_ballot_count(new_result, smd) - get_smd_ballot_count(old_result, smd)
         summary.loc[summary.SMD == smd, 'new_margin'] = get_smd_margin(new_result, smd, competitive_races[smd])
     print(summary)
 
 revisions = ['tues8', 'wed9', 'thurs10', 'fri11', 'mon14']
 results = dict.fromkeys(revisions)
 
-competitive_races = {'5D06': ['Carrie', 'Kathy'],
-                     '5C04': ['Shawn', 'Jacque'],
-                     '5F07': ['Michele', 'Sylvia'],
-                     '5B07': ['Justine', 'Gail'],
-                     '5E02': ['Nicole', 'Karla']}
+competitive_races = {'5D06': ['Dellesky', 'Henderson'],
+                     '5C04': ['Nelson', 'Manning'],
+                     '5F07': ['Keegan', 'Pinkney'],
+                     '5B07': ['Perkowski', 'Brevard'],
+                     '5E02': ['McEntee', 'Lewis']}
+                     # '1E07': ['Farnan', 'Footer']}
 
 for revision in revisions:
     results[revision] = pd.read_csv('data/%s.csv' % revision)
