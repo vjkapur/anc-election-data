@@ -23,16 +23,23 @@ def get_smd_margin(result, smd, candidates):
 
 # print out a quick digest of what changed for interesting races
 def print_summary_snapshot(old_result, new_result, competitive_races):
-    summary = pd.DataFrame(columns = ['SMD', 'candidates', 'previous_margin', 'new_ballots', 'new_margin'])
+    summary = pd.DataFrame(
+        columns=['SMD', 'candidates', 'previous_margin', 'new_ballots', 'new_margin'])
     summary.SMD = competitive_races.keys()
     for smd in competitive_races:
-        summary.loc[summary.SMD == smd, 'candidates'] = "%s/%s" % (competitive_races[smd][0], competitive_races[smd][1])
-        summary.loc[summary.SMD == smd, 'previous_margin'] = get_smd_margin(old_result, smd, competitive_races[smd])
-        summary.loc[summary.SMD == smd, 'new_ballots'] = get_smd_ballot_count(new_result, smd) - get_smd_ballot_count(old_result, smd)
-        summary.loc[summary.SMD == smd, 'new_margin'] = get_smd_margin(new_result, smd, competitive_races[smd])
-    print(summary)
+        summary.loc[summary.SMD == smd, 'candidates'] = "%s/%s" % (
+            competitive_races[smd][0], competitive_races[smd][1])
+        summary.loc[summary.SMD == smd, 'previous_margin'] = get_smd_margin(
+            old_result, smd, competitive_races[smd])
+        summary.loc[summary.SMD == smd, 'new_ballots'] = get_smd_ballot_count(
+            new_result, smd) - get_smd_ballot_count(old_result, smd)
+        summary.loc[summary.SMD == smd, 'new_margin'] = get_smd_margin(
+            new_result, smd, competitive_races[smd])
 
-revisions = ['tues8', 'wed9', 'thurs10', 'fri11', 'mon14']
+    summary.sort_values('new_margin', ascending=False, inplace=True)
+    print(summary.to_string(index=False))
+
+revisions = ['tues8', 'wed9', 'thurs10', 'fri11', 'mon14', 'tues15']
 results = dict.fromkeys(revisions)
 
 competitive_races = {'5D06': ['Dellesky', 'Henderson'],
@@ -40,12 +47,16 @@ competitive_races = {'5D06': ['Dellesky', 'Henderson'],
                      '5F07': ['Keegan', 'Pinkney'],
                      '5B07': ['Perkowski', 'Brevard'],
                      '5E02': ['McEntee', 'Lewis'],
-                     '1E07': ['Farnan', 'Footer']}
+                     '5B05': ['Costello', 'Feeley'],
+                     '5E04': ['Imtiaz', 'Holliday'],
+                     '5F04': ['Galvan', 'Vega'],
+                     '5F05': ['Anderson', 'Farmer-Allen']}
 
 for revision in revisions:
     results[revision] = pd.read_csv('data/%s.csv' % revision)
 
-print_summary_snapshot(results[revisions[-2:][0]], results[revisions[-1:][0]], competitive_races)
+print_summary_snapshot(results[revisions[-2:][0]],
+                       results[revisions[-1:][0]], competitive_races)
 
 # get a list of ANC SMDs
 anc_contests = results['tues8'][results['tues8'].ContestName.str.contains(
