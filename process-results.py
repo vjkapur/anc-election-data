@@ -39,7 +39,7 @@ def print_summary_snapshot(old_result, new_result, competitive_races):
     summary.sort_values('new_margin', ascending=False, inplace=True)
     print(summary.to_string(index=False))
 
-revisions = ['tues8', 'wed9', 'thurs10', 'fri11', 'mon14', 'tues15']
+revisions = ['tues8', 'wed9', 'thurs10', 'fri11', 'mon14', 'fri18']
 results = dict.fromkeys(revisions)
 
 competitive_races = {'5D06': ['Dellesky', 'Henderson'],
