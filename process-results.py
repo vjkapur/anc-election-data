@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 
 import pandas as pd
+from os import listdir
+from os.path import isfile, join
 
 # for a given results set and SMD identifier, return the total ballot count
 
@@ -39,8 +41,8 @@ def print_summary_snapshot(old_result, new_result, competitive_races):
     summary.sort_values('new_margin', ascending=False, inplace=True)
     print(summary.to_string(index=False))
 
-# TODO: get revisions from files rather than hardcode
-revisions = ['tues8', 'wed9', 'thurs10', 'fri11', 'mon14', 'fri18', 'mon21', 'tues22', 'wed30']
+#revisions = ['tues8', 'wed9', 'thurs10', 'fri11', 'mon14', 'fri18', 'mon21', 'tues22', 'wed30']
+revisions = [f for f in listdir('data/2024/') if isfile(join('data/2024/', f))]
 results = dict.fromkeys(revisions)
 
 # TODO: dynamically determine races with more than one balloted candidate
@@ -55,14 +57,13 @@ competitive_races = {'5D06': ['Dellesky', 'Henderson'],
                      '5F05': ['Anderson', 'Farmer-Allen']}
 
 for revision in revisions:
-    results[revision] = pd.read_csv('data/%s.csv' % revision)
+    results[revision] = pd.read_csv('data/2024/%s' % revision)
 
 print_summary_snapshot(results[revisions[-2:][0]],
                        results[revisions[-1:][0]], competitive_races)
 
 # get a list of ANC SMDs
-# TODO: use index 0 rather than a named index
-anc_contests = results['tues8'][results['tues8'].ContestName.str.contains(
+anc_contests = results[next(iter(results))][results[next(iter(results))].ContestName.str.contains(
     'ANC - ')].ContestName.unique()
 smds = [contest.split(' ')[2] for contest in anc_contests]
 
