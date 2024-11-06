@@ -45,16 +45,17 @@ def print_summary_snapshot(old_result, new_result, competitive_races):
 revisions = [f for f in listdir('data/2024/') if isfile(join('data/2024/', f))]
 results = dict.fromkeys(revisions)
 
-# TODO: dynamically determine races with more than one balloted candidate
-competitive_races = {'5D06': ['Dellesky', 'Henderson'],
-                     '5C04': ['Nelson', 'Manning'],
-                     '5F07': ['Keegan', 'Pinkney'],
-                     '5B07': ['Perkowski', 'Brevard'],
-                     '5E02': ['McEntee', 'Lewis'],
-                     '5B05': ['Costello', 'Feeley'],
-                     '5E04': ['Imtiaz', 'Holliday'],
-                     '5F04': ['Galvan', 'Vega'],
-                     '5F05': ['Anderson', 'Farmer-Allen']}
+yimbyness = pd.read_csv('data/yimbyness.csv')
+Y_grouping = yimbyness.groupby('SMD').sum()
+competitive_SMDs_with_Y = Y_grouping[Y_grouping.score > 0].index.values
+
+competitive_races = dict.fromkeys(competitive_SMDs_with_Y, [])
+
+# competitive_races = {'5D06': ['McCray', 'Henderson'],
+#                     '5B07': ['Rathore', 'Haynes'],
+#                     '5E01': ['Gardiner', 'Rodriguez'],
+#                     '5E05': ['Lopez', 'Thompson'],
+#                     '5B05': ['Lopez', 'Feeley']}
 
 for revision in revisions:
     results[revision] = pd.read_csv('data/2024/%s' % revision)
@@ -88,6 +89,9 @@ margin_counts.SMD = competitive_races.keys()
 
 # for each SMD and revision, calculate the ballot count
 for smd in smds:
+    competitive_races[smd][0] = yimbyness[yimbyness.SMD == smd].sort_values(by='score', ascending=False).candidate.iloc[0]
+    competitive_races[smd][1] = yimbyness[yimbyness.SMD == smd].sort_values(by='score', ascending=False).candidate.iloc[1]
+ 
     for revision in revisions:
         ballot_counts.loc[ballot_counts.SMD == smd,
                           '%s ballots' % revision] = get_smd_ballot_count(results[revision], smd)
