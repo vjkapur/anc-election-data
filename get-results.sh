@@ -1,4 +1,6 @@
-curl https://electionresults.dcboe.org/Downloads/Reports/November_8_2022_General_Election_Certified_Results.csv > data/2024/results-$(date +%s%3N)
+# this isn't working as intended and will overwrite a previous file on the same day
+
+curl https://electionresults.dcboe.org/Downloads/Reports/November_5_2024_General_Election_Election_Night_Unofficial_Results.csv > data/2024/results-$(date '+%Y-%m-%d').csv
 
 prefix="data/2024"
 

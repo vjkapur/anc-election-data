@@ -47,9 +47,10 @@ revisions = ['2024-11-05 (1).csv', '2024-11-05 (2).csv', '2024-11-07.csv', '2024
 # revisions = reversed([f for f in listdir('data/2024/') if (('.csv' in f) and isfile(join('data/2024/', f)))])
 results = dict.fromkeys(revisions)
 
-yimbyness = pd.read_csv('data/yimbyness.csv',dtype={"SMD":'U'})
-Y_grouping = yimbyness.groupby('SMD').sum()
-competitive_SMDs_with_Y = Y_grouping[Y_grouping.score > 0].index.values
+# TODO: this dynamic assessing of competitive races is broken
+# yimbyness = pd.read_csv('data/yimbyness.csv',dtype={"SMD":'U'})
+# Y_grouping = yimbyness.groupby('SMD').sum()
+# competitive_SMDs_with_Y = Y_grouping[Y_grouping.score > 0].index.values
 
 voter_counts = pd.read_csv('voter_counts_by_smd.csv')
 ballots_2022 = pd.read_csv('2022_ballots_by_smd_over_time.csv')
