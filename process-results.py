@@ -43,7 +43,7 @@ def print_summary_snapshot(old_result, new_result, competitive_races):
     summary.sort_values('new_margin', ascending=False, inplace=True)
     print(summary.to_string(index=False))
 
-revisions = ['2024-11-05 (1).csv', '2024-11-05 (2).csv', '2024-11-07.csv', '2024-11-08.csv', '2024-11-09.csv']
+revisions = ['2024-11-05 (1).csv', '2024-11-05 (2).csv', '2024-11-07.csv', '2024-11-08.csv', '2024-11-09.csv', '2024-11-15.csv']
 # revisions = reversed([f for f in listdir('data/2024/') if (('.csv' in f) and isfile(join('data/2024/', f)))])
 results = dict.fromkeys(revisions)
 
@@ -121,7 +121,7 @@ for smd in smds:
 # not sure what's up here
 ballot_counts.SMD = ballot_counts.SMD.str.replace('6/8F01 6/8F01', '6/8F01')
 ballot_counts = ballot_counts.merge(ballots_2022[['SMD', 'residual-2022']], how='left', on='SMD')
-ballot_counts['residual-2024'] = ballot_counts['2024-11-09.csv ballots'] - ballot_counts['2024-11-05 (1).csv ballots']
+ballot_counts['residual-2024'] = ballot_counts['2024-11-15.csv ballots'] - ballot_counts['2024-11-05 (1).csv ballots']
 ballot_counts['expected remaining ballots'] = ballot_counts['residual-2022'] * 1.5 - ballot_counts['residual-2024']
 
 # write it out to a CSV
